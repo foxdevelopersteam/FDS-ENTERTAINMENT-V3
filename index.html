@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FDS Entertainment</title><link rel="icon" href="logo.jpg">
+<style>
+:root{--bg:#0f0f0f;--sf:#1b1b1b;--sf2:#272727;--tx:#f1f1f1;--mut:#aaa;--ac:#ff7a00;--bd:#303030}
+@media(prefers-color-scheme:light){:root{--bg:#fff;--sf:#f4f4f4;--sf2:#e8e8e8;--tx:#111;--mut:#606060;--bd:#ddd}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font-family:Roboto,Arial,sans-serif;padding-top:env(safe-area-inset-top,0px)}
+button,select{font:inherit;color:inherit;cursor:pointer;border:0;background:var(--sf2);border-radius:20px;padding:8px 14px}
+button.pri{background:var(--ac);color:#111;font-weight:700}button.on{background:var(--tx);color:var(--bg)}
+input,textarea,select{font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:10px;width:100%}
+a{color:var(--ac)}header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;align-items:center;gap:8px;padding:8px 10px}
+.logo{display:flex;align-items:center;gap:6px;font-weight:800;cursor:pointer;white-space:nowrap}.logo img{width:34px;height:34px;border-radius:8px}.logo b{color:var(--ac)}
+.srch{flex:1;display:flex;min-width:0}.srch input{border-radius:20px 0 0 20px}.srch button{border-radius:0 20px 20px 0}
+.av{width:34px;height:34px;border-radius:50%;background:var(--ac);color:#111;display:grid;place-items:center;font-weight:700;flex:none;cursor:pointer}
+.wrap{display:flex}nav{width:200px;padding:8px;flex:none;position:sticky;top:56px;align-self:flex-start;height:calc(100vh - 56px);overflow:auto}
+nav a{display:block;padding:10px 12px;border-radius:10px;cursor:pointer;color:var(--tx);text-decoration:none}nav a:hover,nav a.on{background:var(--sf2)}
+.verse{margin:12px 6px;padding:10px;border:1px solid var(--ac);border-radius:12px;font-size:13px;color:var(--ac);text-align:center}
+main{flex:1;min-width:0;padding:8px 12px 60px}.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px}.chips button{white-space:nowrap}
+.hero{border-radius:16px;padding:16px;margin-bottom:12px;background:linear-gradient(120deg,#2a1000,#ff7a00 140%);color:#fff;display:flex;gap:14px;align-items:center}.hero img{width:64px;height:64px;border-radius:14px}.hero h2{margin:0 0 4px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px 12px}.card{cursor:pointer}
+.th{aspect-ratio:16/9;border-radius:12px;display:grid;place-items:center;font-size:36px}.card h3{margin:8px 0 2px;font-size:15px}.mut{color:var(--mut);font-size:13px}
+.watch{max-width:900px;margin:auto}.player{min-height:200px;background:#000;border-radius:14px;overflow:hidden;display:grid;place-items:center;color:#fff}
+.player video,.player img{width:100%;max-height:70vh;object-fit:contain}.player audio{width:92%}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.modal{position:fixed;inset:0;background:#000a;display:none;place-items:center;z-index:20;padding:16px}.modal.show{display:grid}
+.box{background:var(--sf);border-radius:16px;padding:20px;width:100%;max-width:400px;display:grid;gap:10px;max-height:90vh;overflow:auto}.box h2{margin:0}.err{color:#ff5a5a;font-size:13px;min-height:16px}
+.li{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bd)}
+footer{text-align:center;color:var(--ac);padding:20px;font-weight:600}footer .mut a{margin:0 6px}
+@media(max-width:760px){nav{display:none}.logo span{display:none}}
+</style></head><body>
+<header><div class="logo" onclick="location.hash='home'"><img src="logo.jpg" alt="FDS"><span>FDS <b>Entertainment</b></span></div>
+<form class="srch" onsubmit="event.preventDefault();q=sq.value;tab='';location.hash='home';route()"><input id="sq" placeholder="Search" aria-label="Search"><button>🔍</button></form>
+<button onclick="up()">＋ Create</button><div id="acct"></div></header>
+<div class="wrap"><nav id="nav"></nav><main id="m"></main></div>
+<footer><div>Glory of 🦊 Verse</div><div class="mut" id="soc"></div></footer>
+<div class="modal" id="auth"><div class="box"><h2 id="at">Sign in to FDS</h2><div class="mut">No email needed. Your FDS account is <b>username@fds.com</b></div>
+<div style="display:flex;align-items:center;gap:6px"><input id="u" placeholder="username" autocapitalize="none"><span class="mut">@fds.com</span></div>
+<input id="p" type="password" placeholder="password"><div class="err" id="ae"></div>
+<button class="pri" id="ab" onclick="doAuth()">Sign in</button><button id="as" onclick="sw()">Create FDS account</button><button onclick="cl('auth')">Close</button></div></div>
+<div class="modal" id="upl"><div class="box"><h2>Create</h2>
+<select id="uy" onchange="uf.style.display=this.value=='text'?'none':'block'"><option value="video">🎬 Video</option><option value="short">📱 Short</option><option value="music">🎵 Music</option><option value="podcast">🎙️ Podcast</option><option value="photo">🖼️ Photo post</option><option value="text">📝 Written post</option></select>
+<input id="ut" placeholder="Title"><textarea id="ud" rows="3" placeholder="Description / caption"></textarea>
+<input id="uf" type="file" accept="video/*,audio/*,image/*"><div class="mut">Max 100 MB per upload.</div><div class="err" id="ue"></div>
+<button class="pri" onclick="doUp()">Publish</button><button onclick="cl('upl')">Cancel</button></div></div>
+<script>
+const CFG={github:"https://github.com/foxdevelopersteam",instagram:"",youtube:"https://youtube.com/@foxdevelopers"};
+const $=i=>document.getElementById(i),E=s=>String(s??"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const T={video:['🎬','Videos'],short:['📱','Shorts'],music:['🎵','Music'],podcast:['🎙️','Podcasts'],photo:['🖼️','Photos'],text:['📝','Posts']};
+let tok=null;try{tok=localStorage.getItem('t')}catch(e){}
+let ME=null,tab='',q='',urls={},mode='in';
+$('soc').innerHTML=[['GitHub',CFG.github],['Instagram',CFG.instagram],['YouTube',CFG.youtube]].filter(x=>x[1]).map(x=>`<a href="${x[1]}" target="_blank" rel="noopener">${x[0]}</a>`).join('•');
+async function api(p,o={}){const h={};if(tok)h.authorization='Bearer '+tok;if(o.json){h['content-type']='application/json';o.body=JSON.stringify(o.json)}
+const r=await fetch('/api/'+p,{method:o.method,body:o.body,headers:h});if(!r.ok){let m='Error';try{m=(await r.json()).error}catch(e){}throw new Error(m)}return o.raw?r:r.json()}
+const idb=()=>new Promise((s,j)=>{const r=indexedDB.open('fds',1);r.onupgradeneeded=()=>r.result.createObjectStore('dl');r.onsuccess=()=>s(r.result);r.onerror=j});
+async function dbx(mode,f){const d=await idb();return new Promise((s,j)=>{const t=d.transaction('dl',mode),r=f(t.objectStore('dl'));t.oncomplete=()=>s(r.result);t.onerror=j})}
+async function blobOf(it){const d=await dbx('readonly',s=>s.get(it.id));if(d)return d.blob;const r=await api('media/'+it.id,{raw:1});return new Blob([await r.arrayBuffer()],{type:it.mime})}
+function open_(i){$(i).classList.add('show')}function cl(i){$(i).classList.remove('show')}
+function sw(){mode=mode=='in'?'up':'in';$('at').textContent=mode=='in'?'Sign in to FDS':'Create FDS account';$('ab').textContent=mode=='in'?'Sign in':'Register';$('as').textContent=mode=='in'?'Create FDS account':'I have an account';$('ae').textContent=''}
+function authBox(){mode='up';sw();open_('auth')}
+async function doAuth(){try{const r=await api(mode=='in'?'login':'signup',{method:'POST',json:{name:$('u').value.trim(),password:$('p').value}});tok=r.token;try{localStorage.setItem('t',tok)}catch(e){}$('p').value='';cl('auth');await load()}catch(e){$('ae').textContent=e.message}}
+async function load(){ME=null;if(tok){try{ME=await api('me')}catch(e){tok=null;try{localStorage.removeItem('t')}catch(x){}}}
+$('acct').innerHTML=ME?`<div class="av" onclick="location.hash='me'" title="${E(ME.name)}@fds.com">${E(ME.name[0].toUpperCase())}</div>`:`<button class="pri" onclick="authBox()">Sign in</button>`;route()}
+async function logout(){try{await api('logout',{method:'POST'})}catch(e){}tok=null;try{localStorage.removeItem('t')}catch(e){}location.hash='home';load()}
+function nav(h){$('nav').innerHTML=[['home','🏠 Home'],['subs','📺 Subscriptions'],['lib','⬇️ Library (downloads)'],['me','👤 Account']].map(([k,l])=>`<a class="${h==k?'on':''}" onclick="tab='';location.hash='${k}';route()">${l}</a>`).join('')+`<div class="verse">Glory of 🦊 Verse</div>`}
+const card=i=>`<div class="card" onclick="location.hash='item-${i.id}'"><div class="th" style="background:linear-gradient(135deg,hsl(${parseInt(i.id.slice(0,3),16)%360},60%,22%),hsl(${(parseInt(i.id.slice(0,3),16)+50)%360},70%,45%))">${T[i.type][0]}</div><h3>${E(i.title)}</h3><div class="mut">@${E(i.ch)} • ${i.likes} 👍 • ${new Date(i.created).toLocaleDateString()}</div></div>`;
+const grid=l=>l.length?`<div class="grid">${l.map(card).join('')}</div>`:'<p class="mut">Nothing here yet — be the first to post!</p>';
+async function route(){const h=location.hash.slice(1)||'home',m=$('m');nav(h);window.scrollTo(0,0);m.innerHTML='<p class="mut">Loading…</p>';
+try{if(h.startsWith('item-'))return await itemPage(h.slice(5));if(h.startsWith('ch-'))return await chPage(h.slice(3));if(h=='me')return await mePage();if(h=='lib')return await libPage();
+const subs=h=='subs';if(subs&&!ME){m.innerHTML='<h2>Subscriptions</h2><button class="pri" onclick="authBox()">Sign in</button>';return}
+const l=await api('feed?'+new URLSearchParams({type:tab,q,subs:subs?1:''}));
+m.innerHTML=(h=='home'?`<div class="hero"><img src="logo.jpg" alt=""><div><h2>FDS Entertainment</h2><div>Your Entertainment • Our Priority</div><b>Glory of 🦊 Verse</b></div></div>`:'<h2>Subscriptions</h2>')+`<div class="chips"><button class="${tab?'':'on'}" onclick="tab='';route()">All</button>${Object.entries(T).map(([k,v])=>`<button class="${tab==k?'on':''}" onclick="tab='${k}';route()">${v[0]} ${v[1]}</button>`).join('')}</div>`+grid(l)}
+catch(e){m.innerHTML=`<p class="err">${E(e.message)}</p>`}}
+async function itemPage(id){const r=await api('item/'+id),i=r.item,m=$('m');
+m.innerHTML=`<div class="watch"><div class="player" id="pl" oncontextmenu="return false">${i.type=='text'?'':'Loading…'}</div><h2>${T[i.type][0]} ${E(i.title)}</h2>
+<div class="row"><b onclick="location.hash='ch-${i.ch}'" style="cursor:pointer">@${E(i.ch)}</b><button class="${r.subbed?'':'pri'}" onclick="act('sub/${i.ch}')">${r.subbed?'Subscribed ✓':'Subscribe'}</button><span style="flex:1"></span>
+<button onclick="act('like/${i.id}')">${r.liked?'👍 Liked':'👍 Like'} ${i.likes}</button><button onclick="share('${i.id}','${E(i.title).replace(/'/g,'')}')">↗ Share</button>${i.type=='text'?'':`<button id="dl" onclick="dlApp('${i.id}')">⬇️ Download in app</button>`}</div>
+<p style="white-space:pre-wrap">${E(i.desc)}</p></div>`;if(i.type=='text')return;
+try{if(!urls[id])urls[id]=URL.createObjectURL(await blobOf(i));const u=urls[id],p=$('pl');
+p.innerHTML=i.type=='photo'?`<img src="${u}" draggable="false">`:i.type=='music'||i.type=='podcast'?`<audio src="${u}" controls controlsList="nodownload" autoplay></audio>`:`<video src="${u}" controls controlsList="nodownload noremoteplayback" disablePictureInPicture playsinline autoplay></video>`}catch(e){$('pl').textContent='Could not load media'}}
+async function act(p){if(!ME)return authBox();try{await api(p,{method:'POST'});route()}catch(e){alert(e.message)}}
+function share(id,t){const u=location.origin+'/#item-'+id;navigator.share?navigator.share({title:t,url:u}).catch(()=>{}):(navigator.clipboard&&navigator.clipboard.writeText(u),alert('Link copied'))}
+async function dlApp(id){if(!ME)return authBox();try{const i=(await api('item/'+id)).item,b=await blobOf(i);await dbx('readwrite',s=>s.put({meta:i,blob:b},id));$('dl').textContent='✓ Saved in Library'}catch(e){alert('Download failed')}}
+async function libPage(){const l=await dbx('readonly',s=>s.getAll());$('m').innerHTML='<h2>Library</h2><p class="mut">Free downloads, playable only inside FDS.</p>'+grid(l.map(x=>x.meta))}
+async function chPage(h){const r=await api('channel/'+h);$('m').innerHTML=`<div class="hero"><div class="av" style="width:64px;height:64px;font-size:26px">${E(r.ch.title[0])}</div><div><h2>${E(r.ch.title)}</h2><div>@${E(r.ch.handle)} • ${r.ch.subs} subscribers</div><div>${E(r.ch.about)}</div></div></div><div class="row"><button class="${r.subbed?'':'pri'}" onclick="act('sub/${r.ch.handle}')">${r.subbed?'Subscribed ✓':'Subscribe'}</button></div>`+grid(r.items)}
+async function mePage(){const m=$('m');if(!ME){m.innerHTML='<h2>Account</h2><button class="pri" onclick="authBox()">Sign in / Create account</button>';return}
+const c=ME.channel,mine=c?await api('feed?mine=1'):[];
+m.innerHTML=`<h2>Account</h2><p><b>${E(ME.name)}@fds.com</b></p>`+(c?`<div class="li"><span>📺 Your channel: <b>${E(c.title)}</b> (@${E(c.handle)}) • ${c.subs} subs</span><button onclick="location.hash='ch-${c.handle}'">Open</button></div><h3>Your uploads</h3>`+(mine.map(i=>`<div class="li"><span>${T[i.type][0]} ${E(i.title)}</span><span><button onclick="location.hash='item-${i.id}'">View</button> <button onclick="del('${i.id}')">Delete</button></span></div>`).join('')||'<p class="mut">No uploads yet.</p>')
+:`<div class="box" style="padding:0;background:none"><h3>Create your channel (one per account)</h3><input id="ch1" placeholder="channel handle (letters, numbers, dots)"><input id="ch2" placeholder="Channel name"><textarea id="ch3" rows="2" placeholder="About"></textarea><div class="err" id="ce"></div><button class="pri" onclick="mkCh()">Create channel</button></div>`)
++`<h3>Subscribed to</h3><p class="mut">${ME.subs.map(s=>`<a onclick="location.hash='ch-${s}'" style="cursor:pointer">@${E(s)}</a>`).join(', ')||'None yet'}</p><div class="row"><button onclick="logout()">Sign out</button></div>`}
+async function mkCh(){try{await api('channel',{method:'POST',json:{handle:$('ch1').value,title:$('ch2').value,about:$('ch3').value}});await load()}catch(e){$('ce').textContent=e.message}}
+async function del(id){if(confirm('Delete this upload?')){await api('item/'+id,{method:'DELETE'});route()}}
+function up(){if(!ME)return authBox();if(!ME.channel){location.hash='me';return alert('Create your channel first.')}$('ue').textContent='';open_('upl')}
+async function doUp(){const e=$('ue'),ty=$('uy').value,t=$('ut').value.trim(),f=$('uf').files[0],b={type:ty,title:t,desc:$('ud').value};
+try{if(!t)throw Error('Add a title');if(ty!='text'){if(!f)throw Error('Choose a file');if(f.size>100*1048576)throw Error('Max 100 MB');const id=[...crypto.getRandomValues(new Uint8Array(8))].map(x=>x.toString(16).padStart(2,'0')).join('');e.textContent='Uploading… please wait';await api('media/'+id,{method:'PUT',body:f});Object.assign(b,{id,size:f.size,mime:f.type||'application/octet-stream'})}
+const r=await api('item',{method:'POST',json:b});$('ut').value=$('ud').value='';$('uf').value='';cl('upl');location.hash='item-'+r.id;route()}catch(x){e.textContent=x.message}}
+addEventListener('hashchange',route);load();
+</script></body></html>
