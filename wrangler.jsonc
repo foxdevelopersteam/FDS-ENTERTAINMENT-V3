@@ -1,5 +1,5 @@
 {
-  "name": "fds-entertainment-v3cf",
+  "name": "fds-entertainment-v3c",
   "main": "worker.js",
   "compatibility_date": "2025-09-01",
   "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "fds-media" }],
